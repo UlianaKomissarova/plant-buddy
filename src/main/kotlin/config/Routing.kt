@@ -13,6 +13,8 @@ import dev.uliana.auth.controller.authenticatedSessionApi
 import dev.uliana.auth.controller.registrationApi
 import dev.uliana.auth.controller.sessionApi
 import dev.uliana.auth.security.JwtAuthProvider
+import dev.uliana.plant.controller.plantApi
+import dev.uliana.plant.controller.wateringApi
 import dev.uliana.user.model.PrincipalUser
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -38,6 +40,14 @@ fun NormalOpenAPIRoute.swaggerRouting() {
         auth(JwtAuthProvider()) {
             tag(SwaggerTag.Аутентификация) {
                 authenticatedSessionApi()
+            }
+
+            tag(SwaggerTag.Растения) {
+                plantApi()
+            }
+
+            tag(SwaggerTag.Полив) {
+                wateringApi()
             }
         }
     }
