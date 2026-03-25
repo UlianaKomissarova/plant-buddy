@@ -61,8 +61,9 @@ dependencies {
     implementation("org.apache.commons:commons-email:1.6.0")
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0")
 
-    // Google Auth
+    // Google Auth & Firebase
     implementation("com.google.auth:google-auth-library-oauth2-http:1.23.0")
+    implementation("com.google.firebase:firebase-admin:9.2.0")
 
     // OpenAPI & Swagger
     implementation("io.github.darkxanter:ktor-openapi-generator:0.8.0")

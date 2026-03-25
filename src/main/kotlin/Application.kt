@@ -11,10 +11,13 @@ import dev.uliana.config.configureSwagger
 import dev.uliana.config.connectToPostgres
 import dev.uliana.config.serviceRouting
 import dev.uliana.config.swaggerRouting
+import dev.uliana.notification.FcmService
+import dev.uliana.notification.WateringNotificationScheduler
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.log
 import io.ktor.server.routing.routing
+import org.koin.java.KoinJavaComponent.getKoin
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -38,6 +41,9 @@ fun Application.module() {
     configureSecurity()
     configureFrameworks()
     configureStatusPages()
+
+    FcmService.init()
+    getKoin().get<WateringNotificationScheduler>().start()
 
     apiRouting { swaggerRouting() }
 

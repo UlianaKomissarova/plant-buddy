@@ -7,6 +7,7 @@ import dev.uliana.auth.repository.RefreshTokenRepositoryImpl
 import dev.uliana.auth.security.JwtService
 import dev.uliana.auth.service.RegistrationService
 import dev.uliana.auth.service.SessionService
+import dev.uliana.notification.WateringNotificationScheduler
 import dev.uliana.plant.repository.PlantRepository
 import dev.uliana.plant.repository.PlantRepositoryImpl
 import dev.uliana.plant.repository.WateringLogRepository
@@ -17,6 +18,9 @@ import dev.uliana.user.email.repository.EmailLogRepository
 import dev.uliana.user.email.repository.EmailLogRepositoryImpl
 import dev.uliana.user.email.service.EmailBuilder
 import dev.uliana.user.email.service.HtmlEmailBuilderImpl
+import dev.uliana.user.repository.UserRepository
+import dev.uliana.user.repository.UserRepositoryImpl
+import dev.uliana.user.service.UserService
 import org.koin.dsl.module
 
 val appModule = module {
@@ -35,4 +39,11 @@ val appModule = module {
     single<WateringLogRepository> { WateringLogRepositoryImpl() }
     single { PlantService(get()) }
     single { WateringService(get(), get(), get()) }
+
+    // Users
+    single<UserRepository> { UserRepositoryImpl() }
+    single { UserService(get()) }
+
+    // Notifications
+    single { WateringNotificationScheduler(get(), get()) }
 }

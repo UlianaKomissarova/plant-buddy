@@ -12,6 +12,7 @@ import dev.uliana.auth.service.validator.PasswordValidator
 import dev.uliana.user.database.UserEntity
 import dev.uliana.user.email.model.EmailConfirmationNotification
 import dev.uliana.util.exception.ConflictException
+import dev.uliana.util.exception.ErrorCode
 import dev.uliana.util.exception.UnauthorizedException
 import java.time.Duration
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +50,7 @@ class RegistrationService(
             email = request.email,
             codeHash = CodeHasher.hash(request.code),
             type = CodeType.EMAIL_CONFIRMATION
-        ) ?: throw UnauthorizedException("Invalid or expired code")
+        ) ?: throw UnauthorizedException("Invalid or expired code", ErrorCode.INVALID_CONFIRMATION_CODE)
 
         codeRepository.markCodeAsUsed(codeEntity.id.value)
         repository.confirmUser(codeEntity.userId.value)

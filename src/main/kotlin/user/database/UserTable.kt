@@ -17,6 +17,7 @@ object UserTable : UUIDTable("users") {
 
     val fcmToken = varchar("fcm_token", 512).nullable()
     val timezone = varchar("timezone", 100).default("UTC")
+    val notificationTime = varchar("notification_time", 5).default("09:00")
 
     val createdAt = timestamp("created_at").defaultExpression(CurrentTimestamp)
     val updatedAt = timestamp("updated_at").defaultExpression(CurrentTimestamp)
@@ -34,6 +35,7 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var fcmToken by UserTable.fcmToken
     var timezone by UserTable.timezone
+    var notificationTime by UserTable.notificationTime
 
     var createdAt by UserTable.createdAt
     var updatedAt by UserTable.updatedAt

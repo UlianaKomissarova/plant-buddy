@@ -7,6 +7,7 @@ import dev.uliana.auth.repository.AuthRepository
 import dev.uliana.auth.security.JwtService
 import dev.uliana.auth.security.JwtVerifier
 import dev.uliana.user.model.PrincipalUser
+import dev.uliana.util.exception.ErrorCode
 import dev.uliana.util.exception.ForbiddenException
 import dev.uliana.util.exception.UnauthorizedException
 import java.time.Instant
@@ -23,18 +24,18 @@ class SessionService(
     suspend fun login(request: LoginRequest): TokenResponse =
         withContext(Dispatchers.IO) {
             val user = repository.findUserByEmail(request.email)
-                ?: throw UnauthorizedException("Invalid credentials")
+            val passwordMatches = user != null && BCrypt.checkpw(request.password, user.passwordHash)
 
-            if (!BCrypt.checkpw(request.password, user.passwordHash)) {
-                throw UnauthorizedException("Invalid credentials")
+            if (user == null || !passwordMatches) {
+                throw UnauthorizedException("Invalid credentials", ErrorCode.INVALID_CREDENTIALS)
             }
 
             if (!user.isConfirmed) {
-                throw ForbiddenException("Email not confirmed")
+                throw ForbiddenException("Email not confirmed", ErrorCode.EMAIL_NOT_CONFIRMED)
             }
 
             if (user.isBlocked) {
-                throw ForbiddenException("Account is blocked")
+                throw ForbiddenException("Account is blocked", ErrorCode.ACCOUNT_BLOCKED)
             }
 
             jwtService.generateTokens(user.id)
@@ -47,12 +48,12 @@ class SessionService(
             val userId = UUID.fromString(jwt.subject)
 
             val user = repository.findUserById(userId)
-                ?: throw UnauthorizedException("User not found")
+                ?: throw UnauthorizedException("Invalid credentials", ErrorCode.INVALID_CREDENTIALS)
 
             val latestToken = jwtService.getValidUserToken(userId, request.refreshToken)
-                ?: throw UnauthorizedException("Invalid refresh token")
+                ?: throw UnauthorizedException("Invalid refresh token", ErrorCode.TOKEN_INVALID)
 
-            if (user.isBlocked) throw ForbiddenException("Account is blocked")
+            if (user.isBlocked) throw ForbiddenException("Account is blocked", ErrorCode.ACCOUNT_BLOCKED)
 
             transaction { latestToken.revokedAt = Instant.now() }
 

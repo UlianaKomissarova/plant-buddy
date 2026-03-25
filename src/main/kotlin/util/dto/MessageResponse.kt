@@ -1,3 +1,3 @@
 package dev.uliana.util.dto
 
-data class MessageResponse(val message: String)
+data class ErrorResponse(val code: String, val message: String)

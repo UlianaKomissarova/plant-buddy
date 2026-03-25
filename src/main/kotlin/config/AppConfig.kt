@@ -10,6 +10,8 @@ object AppConfig {
     lateinit var mail: MailConfig
     lateinit var swagger: SwaggerConfig
     lateinit var server: ServerConfig
+    lateinit var fcm: FcmConfig
+    lateinit var notification: NotificationConfig
 
     fun init(config: ApplicationConfig) {
         postgres = PostgresConfig(
@@ -51,6 +53,14 @@ object AppConfig {
         server = ServerConfig(
             url = config.propertyOrNull("server.url")?.getString() ?: "http://localhost:8080",
             apiVersion = API_VERSION,
+        )
+
+        fcm = FcmConfig(
+            serviceAccountJson = config.propertyOrNull("fcm.serviceAccountJson")?.getString() ?: "",
+        )
+
+        notification = NotificationConfig(
+            hourUtc = config.propertyOrNull("notification.hourUtc")?.getString()?.toInt() ?: 9,
         )
     }
 
@@ -96,4 +106,12 @@ data class SwaggerConfig(
 data class ServerConfig(
     val url: String,
     val apiVersion: String,
+)
+
+data class FcmConfig(
+    val serviceAccountJson: String,
+)
+
+data class NotificationConfig(
+    val hourUtc: Int,
 )

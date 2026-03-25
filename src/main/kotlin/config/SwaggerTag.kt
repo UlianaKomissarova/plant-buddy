@@ -6,7 +6,7 @@ import com.papsign.ktor.openapigen.APITag
 enum class SwaggerTag(override val description: String = "") : APITag {
     Аутентификация,
     Регистрация,
+    Профиль,
     Растения,
     Полив,
-
 }
