@@ -14,17 +14,17 @@ object PasswordValidator {
     fun validate(password: String) {
         val errors = buildList {
             if (password.length < MIN_LENGTH)
-                add("Password must be at least $MIN_LENGTH characters long")
+                add("Пароль должен содержать минимум $MIN_LENGTH символов")
             if (password.length > MAX_LENGTH)
-                add("Password must be at most $MAX_LENGTH characters long")
+                add("Пароль должен содержать максимум $MAX_LENGTH символов")
             if (!hasUpperCase.containsMatchIn(password))
-                add("Password must contain at least one uppercase letter")
+                add("Пароль должен содержать хотя бы одну заглавную букву")
             if (!hasLowerCase.containsMatchIn(password))
-                add("Password must contain at least one lowercase letter")
+                add("Пароль должен содержать хотя бы одну строчную букву")
             if (!hasDigit.containsMatchIn(password))
-                add("Password must contain at least one digit")
+                add("Пароль должен содержать хотя бы одну цифру")
             if (!hasSpecialChar.containsMatchIn(password))
-                add("Password must contain at least one special character")
+                add("Пароль должен содержать хотя бы один специальный символ")
         }
 
         if (errors.isNotEmpty()) throw BadRequestException(errors.joinToString(", "))

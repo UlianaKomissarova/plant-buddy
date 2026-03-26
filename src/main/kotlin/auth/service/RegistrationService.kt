@@ -42,7 +42,8 @@ class RegistrationService(
             timezone = request.timezone
         )
 
-        sendConfirmationCode(user)
+        // TODO: отправка письма временно отключена, пользователь подтверждается автоматически
+        repository.confirmUser(user.id.value)
     }
 
     suspend fun confirm(request: ConfirmRequest): TokenResponse = withContext(Dispatchers.IO) {
